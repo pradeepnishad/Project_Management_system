@@ -234,4 +234,4 @@ http://127.0.0.1:8000/admin
 Developed by **Pradeep Nishad**
 
 GitHub:
-https://github.com/your-username
+https://github.com/pradeepnishad
