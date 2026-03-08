@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-card">
+
+        <h2>Create Project</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Title</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price Bid</label>
+                    {{ form.price_bid }}
+                </div>
+
+                <div class="form-group">
+                    <label>Complexity</label>
+                    {{ form.complexity }}
+                </div>
+
+                <div class="form-group">
+                    <label>Urgency</label>
+                    {{ form.urgency }}
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Submit Project
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-container">
+
+    <h2 style="margin-bottom:25px;">Client Dashboard</h2>
+
+    <!-- Metrics -->
+    <div class="metrics-grid">
+
+        <div class="metric-card bg-blue">
+            <h3>{{ total_projects }}</h3>
+            <p>Total Projects</p>
+        </div>
+
+        <div class="metric-card bg-green">
+            <h3>{{ completed_projects }}</h3>
+            <p>Completed</p>
+        </div>
+
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="section-card" style="margin-top:30px;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0;">Recent Projects</h3>
+
+            <a href="{% url 'project_create' %}"
+               class="assign-btn">
+                + Create Project
+            </a>
+        </div>
+
+        {% for project in recent_projects %}
+            <div class="project-row">
+
+                <div class="project-left">
+                    <div class="project-title">
+                        <a href="{% url 'project_detail' project.pk %}">
+                            {{ project.title }}
+                        </a>
+                    </div>
+
+                    <div class="project-sub">
+                        <span class="status-badge status-{{ project.status }}">
+                            {{ project.status }}
+                        </span>
+
+                        <span class="project-price">
+                            ₹{{ project.price_bid }}
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        {% empty %}
+
+            <div class="empty-state">
+                <p>No projects yet.</p>
+                <a href="{% url 'project_create' %}" class="assign-btn">
+                    Create Your First Project
+                </a>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

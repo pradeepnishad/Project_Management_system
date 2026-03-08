@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+<!-- <h2>{{ project.title }}</h2>
+
+<p><strong>Description:</strong> {{ project.description }}</p>
+<p><strong>Client:</strong> {{ project.client.username }}</p>
+<p><strong>Manager:</strong> {{ project.manager }}</p>
+<p><strong>Status:</strong> {{ project.status }}</p>
+<p><strong>Priority Score:</strong> {{ project.priority_score }}</p>
+
+<hr>
+
+{% if request.user.role != 'client' %}
+    <h3>Update Status</h3>
+
+    {% for status in next_statuses %}
+        <form method="post" action="{% url 'update_project_status' project.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="{{ status }}">
+            <button type="submit">
+                Move to {{ status }}
+            </button>
+        </form>
+    {% endfor %}
+{% endif %}
+
+<hr>
+
+<a href="{% url 'project_list' %}">Back to Projects</a>
+
+<hr>
+<h3>Project War Room</h3>
+
+<div id="chat-box"
+     style="border:1px solid #ccc; padding:10px; max-height:300px; overflow-y:auto;">
+
+    {% for message in page_obj %}
+    <div style="margin-bottom:10px;">
+        <strong>{{ message.sender.username }}</strong>
+        <small>({{ message.created_at|date:"H:i d M" }})</small>
+
+        {% if request.user == message.sender or request.user.role == "admin" %}
+            <small>
+                | <a href="{% url 'edit_message' message.pk %}">Edit</a>
+                | <a href="{% url 'delete_message' message.pk %}">Delete</a>
+            </small>
+        {% endif %}
+
+        <br>
+        {{ message.content }}
+    </div>
+    <hr>
+{% endfor %}
+
+
+</div>
+<div style="margin-top:10px;">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
+<br>
+
+
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.content }}
+    <br>
+    {{ form.use_ai }}
+    {{ form.use_ai.label }}
+    <br><br>
+    <button type="submit">Send</button>
+</form> -->
+
+
+
+
+{% block content %}
+
+<!-- <div class="card">
+
+<h2>{{ project.title }}</h2>
+
+<span class="badge status-{{ project.status }}">
+    {{ project.status }}
+</span>
+
+<p><strong>Description:</strong></p>
+<p>{{ project.description }}</p>
+<p><strong>Client:</strong> {{ project.client.username }}</p>
+<p><strong>Manager:</strong> {{ project.manager }}</p> -->
+
+<!-- <p><strong>Priority Score:</strong> {{ project.priority_score }}</p> -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
+   
+    <!-- LEFT SIDE -->
+    <div class="card">
+
+        <h2>{{ project.title }}</h2>
+
+        <span class="badge status-{{ project.status }}">
+            {{ project.status }}
+        </span>
+
+        <hr style="margin: 20px 0;">
+
+        <h3>Description</h3>
+
+        <div style="
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        ">
+            {{ project.description }}
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">Project Info</h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <div class="info-label">Client</div>
+                <div class="info-value">
+                    {{ project.client.username }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Manager</div>
+                <div class="info-value">
+                    {% if project.manager %}
+                    {{ project.manager.username }}
+                    {% else %}
+                    <span style="color:#dc2626;">Not Assigned</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Price Bid</div>
+                <div class="info-value">
+                    ₹{{ project.price_bid }}
+                </div>
+            </div>
+
+            <div class="info-item">
+
+                <div class="info-value">
+                    {% if request.user.role == "manager" %}
+                    <a class="assign-btn" href="{% url 'manager_assign_associates' project.pk %}">
+                        Assign Associates
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Urgency</div>
+                <div class="info-value">
+                    {{ project.urgency }}
+                </div>
+            </div>
+
+            <div class="highlight-score">
+                <div style="font-size:12px; opacity:0.8;">Priority Score</div>
+                <div style="font-size:24px; font-weight:bold;">
+                    {{ project.priority_score }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr style="margin: 40px 0;">
+
+<div class="card" style="padding:0; overflow:hidden; width:100%;">
+
+    <!-- Header -->
+    <div style="
+        padding:15px 20px;
+        border-bottom:1px solid #e5e7eb;
+        font-weight:600;
+        background:#f9fafb;
+    ">
+        Project War Room
+    </div>
+
+    <!-- Messages -->
+    <div style="
+        max-height:400px;
+        overflow-y:auto;
+        padding:20px;
+        background:white;
+    ">
+
+        {% for message in page_obj %}
+        <div style="margin-bottom:15px;">
+
+            <!-- <div style="font-size:12px; color:#6b7280;">
+                {{ message.sender.username }} •
+                {{ message.created_at|date:"d M H:i" }}
+            </div> -->
+
+            <div class="message-meta">
+                <div class="avatar">
+                    {{ message.sender.username|first|upper }}
+                </div>
+
+                <div>
+                    <div class="message-username">
+                        {{ message.sender.username }}
+                    </div>
+                    <div class="message-time">
+                        {{ message.created_at|date:"d M Y • H:i" }}
+                    </div>
+                </div>
+            </div>
+
+            {% if request.user == message.sender or request.user.role == "admin" %}
+            <div class="message-actions">
+                <a href="{% url 'edit_message' message.pk %}" class="edit-btn">
+                    ✏ Edit
+                </a>
+                <a href="{% url 'delete_message' message.pk %}" class="delete-btn">
+                    🗑 Delete
+                </a>
+            </div>
+            {% endif %}
+
+            <div style="
+                    background:#f3f4f6;
+                    padding:10px 14px;
+                    border-radius:10px;
+                    margin-top:5px;
+                    display:inline-block;
+                    max-width:75%;
+                ">
+                {{ message.content }}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="chat-pagination">
+
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">
+            ◀ Previous
+        </a>
+        {% else %}
+        <span class="page-btn disabled">
+            ◀ Previous
+        </span>
+        {% endif %}
+
+        <span class="page-info">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-btn">
+            Next ▶
+        </a>
+        {% else %}
+        <span class="page-btn disabled">
+            Next ▶
+        </span>
+        {% endif %}
+
+    </div>
+
+    <!-- Input -->
+    <div style="
+        padding:15px 20px;
+        border-top:1px solid #e5e7eb;
+        background:#f9fafb;
+    ">
+        <form method="post">
+            {% csrf_token %}
+
+            <textarea name="content" placeholder="Write a message..." style="
+                    width:100%;
+                    border-radius:8px;
+                    border:1px solid #d1d5db;
+                    padding:10px;
+                    resize:none;
+                    min-height:60px;
+                "></textarea>
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-top:10px;
+            ">
+                <label style="font-size:13px;">
+                    {{ form.use_ai }} Improve grammar
+                </label>
+
+                <button type="submit" style="
+                    background:#2563eb;
+                    color:white;
+                    border:none;
+                    padding:7px 18px;
+                    border-radius:6px;
+                ">
+                    Send
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    window.onload = function () {
+        const chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+</script>
+
+{% endblock %}

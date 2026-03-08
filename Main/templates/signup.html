@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <h2 class="auth-title">Create Account</h2>
+        <p class="auth-subtitle">
+            Register as a client to submit your project
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div >
+                    {{ form.password1 }}
+                    <span class="toggle-password" onclick="togglePassword('id_password1')">
+                        👁
+                    </span>
+                </div>
+
+                <div class="strength-bar">
+                    <div id="strength-fill"></div>
+                </div>
+
+                <small id="strength-text"></small>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                {{ form.password2 }}
+            </div>
+
+            <button type="submit" class="auth-btn">
+                Register
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account?
+            <a href="/">Login</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function togglePassword(fieldId) {
+    const input = document.getElementById(fieldId);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+const passwordInput = document.getElementById("id_password1");
+const strengthFill = document.getElementById("strength-fill");
+const strengthText = document.getElementById("strength-text");
+
+passwordInput.addEventListener("input", function () {
+
+    const value = passwordInput.value;
+    let strength = 0;
+
+    if (value.length >= 8) strength++;
+    if (/[A-Z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+    const levels = [
+        { width: "25%", color: "#dc2626", text: "Weak" },
+        { width: "50%", color: "#f59e0b", text: "Moderate" },
+        { width: "75%", color: "#2563eb", text: "Strong" },
+        { width: "100%", color: "#16a34a", text: "Very Strong" },
+    ];
+
+    if (value.length === 0) {
+        strengthFill.style.width = "0%";
+        strengthText.textContent = "";
+        return;
+    }
+
+    const level = levels[strength - 1] || levels[0];
+
+    strengthFill.style.width = level.width;
+    strengthFill.style.background = level.color;
+    strengthText.textContent = level.text;
+    strengthText.style.color = level.color;
+});
+
+</script>
+
+{% endblock %}

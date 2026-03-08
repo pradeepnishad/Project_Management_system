@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+
+<!-- <h2>Projects</h2>
+
+{% if request.user.role == 'client' or request.user.role == 'admin' %}
+<a href="{% url 'project_create' %}">Create Project</a>
+{% endif %}
+
+<ul>
+    {% for project in projects %}
+    <li>
+
+
+        {{ project.title }} |
+
+        <a href="{% url 'project_detail' project.pk %}">
+            {{ project.title }}
+        </a>
+        Status: {{ project.status }} |
+        Priority: {{ project.priority_score }}
+
+        {% if request.user.role == 'admin' and project.status == 'new' %}
+        <a href="{% url 'assign_project' project.pk %}">
+            Assign
+        </a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="/dashboard/">Back to Dashboard</a> -->
+
+
+{% block content %}
+
+<div class="dashboard-container">
+<h2>Projects</h2>
+<br>
+
+{% if request.user.role == 'client' or request.user.role == 'admin' %}
+    <a class="btn" href="{% url 'project_create' %}">Create Project</a>
+{% endif %}
+
+<br><br>
+
+{% for project in projects %}
+    <div class="project-row">
+
+    <div class="project-left">
+        <div class="project-title">
+            <a href="{% url 'project_detail' project.pk %}">
+                {{ project.title }}
+            </a>
+        </div>
+
+        <div class="project-sub">
+            <span class="status-badge status-{{ project.status }}">
+                {{ project.status }}
+            </span>
+
+            <span class="project-price">
+                ₹{{ project.price_bid }}
+            </span>
+        </div>
+    </div>
+
+    <div class="project-right">
+        {% if request.user.role == "admin" and project.status == "new" %}
+            <a href="{% url 'assign_project' project.pk %}"
+               class="assign-btn">
+                Assign
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endfor %}
+</div>
+{% endblock %}

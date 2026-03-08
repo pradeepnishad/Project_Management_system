@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="assign-container">
+
+<div class="assign-card">
+
+<h2>Assign Associates</h2>
+
+<p class="project-name">Project: <strong>{{ project.title }}</strong></p>
+
+<form method="post">
+{% csrf_token %}
+
+<div class="associate-grid">
+
+{% for checkbox in form.associates %}
+<label class="associate-card">
+
+{{ checkbox.tag }}
+
+<div class="associate-info">
+<div class="associate-avatar">
+{{ checkbox.choice_label|first|upper }}
+</div>
+
+<div class="associate-name">
+{{ checkbox.choice_label }}
+</div>
+</div>
+
+</label>
+{% endfor %}
+
+</div>
+
+<button type="submit" class="primary-btn">
+Assign Team
+</button>
+
+</form>
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+<!-- <h2>Admin Dashboard</h2>
+<a href="/projects/">View Projects</a>
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form> -->
+
+{% block content %}
+
+<div class="dashboard-container">
+
+<h2>Admin Dashboard</h2>
+
+<div class="metrics-grid">
+    <div class="metric-card bg-blue">
+        <h3>{{ total_projects }}</h3>
+        <p>Total Projects</p>
+    </div>
+
+    <div class="metric-card bg-green">
+        <h3>{{ total_clients }}</h3>
+        <p>Total Clients</p>
+    </div>
+
+    <div class="metric-card bg-purple">
+        <h3>₹{{ total_revenue }}</h3>
+        <p>Total Revenue</p>
+    </div>
+</div>
+
+<div class="section-grid">
+
+<div class="section-card">
+            <h3>Project Status Distribution</h3>
+
+            <div style="max-width:400px; margin:auto;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+
+ <div class="section-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0;">Recent Projects</h3>
+        <a href="{% url 'project_list' %}" style="font-size:13px; text-decoration:none; color:#2563eb;">
+            View All →
+        </a>
+    </div>
+
+    {% for project in recent_projects %}
+        <div class="project-item">
+            <div>
+                <div class="project-title">
+                    <a href="{% url 'project_detail' project.pk %}">
+                        {{ project.title }}
+                    </a>
+                </div>
+                <div class="project-meta">
+                    ₹{{ project.price_bid }} • {{ project.status|capfirst }}
+                </div>
+            </div>
+
+            <span class="status-badge status-{{ project.status }}">
+                {{ project.status }}
+            </span>
+        </div>
+    {% empty %}
+        <p style="color:#6b7280;">No projects yet.</p>
+    {% endfor %}
+</div>
+
+</div>
+</div>
+
+<script>
+    const ctx = document.getElementById('statusChart').getContext('2d');
+
+    const statusChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ status_labels| safe }},
+    datasets: [{
+        data: {{ status_counts| safe }},
+        backgroundColor: [
+        '#2563eb',
+        '#f59e0b',
+        '#16a34a',
+        '#dc2626',
+        '#7c3aed',
+        '#0ea5e9'
+    ]
+            }]
+        },
+    options: {
+        responsive: true,
+            plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+    });
+</script>
+
+{% endblock %}
